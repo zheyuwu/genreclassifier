@@ -1,7 +1,8 @@
 class SliceWindow(object):
-    def __init__(self, data, samples):
+    def __init__(self, data, samples, hop):
         self.data = data
         self.samples = samples
+        self.hop = hop
         self.off = 0
 
     def __iter__(self):
@@ -16,5 +17,5 @@ class SliceWindow(object):
 
         else:
             window = self.data[self.off : self.off + self.samples]
-            self.off += 1
+            self.off += self.hop
             return window
