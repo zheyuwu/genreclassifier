@@ -19,7 +19,7 @@ def parallel(window):
         bands.append(pywt.upcoef('d', coffs[-lv], db4, level=lv))
     bands.append(pywt.upcoef('a', coffs[0], db4, level=len(coffs) - 1))
 
-    scale = 8
+    scale = 4
     xs = np.zeros(len(window) / scale)
     for band in bands:
         band = np.abs(band[:len(window)])
@@ -46,7 +46,7 @@ def parallel(window):
     top3 = []
     for signal, bpm in reversed(sorted(zip(ys[tmp2], 60.0 / (tmp2 * (float(scale) / SR))))):
         if bpm >= 40 and bpm <= 200:
-            top3.append((round(bpm), signal))
+            top3.append((round(bpm / 2) * 2, signal))
             if len(top3) == 3:
                 break
 
@@ -74,8 +74,8 @@ def calc(data):
 if __name__ == '__main__':
     data, sr = librosa.load(sys.argv[1])
     assert sr == SR
-    print(calc(data))
+    print(sys.argv[1], calc(data))
 
-    onset_env = librosa.onset.onset_strength(data, sr=sr)
-    tempo = librosa.beat.estimate_tempo(onset_env, sr=sr)
-    print(tempo)
+    #onset_env = librosa.onset.onset_strength(data, sr=sr)
+    #tempo = librosa.beat.estimate_tempo(onset_env, sr=sr)
+    #print(tempo)
