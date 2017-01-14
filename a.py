@@ -81,7 +81,7 @@ def gen_x2(x_low, x_high):
 # Return the peaks in x2.
 def SACF_Enhancer(x2):
     # Select positive peaks
-    peaks = librosa.util.peak_pick(x2, 8, 8, 16, 16, 1e-4, 4)
+    peaks = librosa.util.peak_pick(x2, 8, 8, 16, 16, 0, 4)
     assert len(peaks) > 0
 
     peaks = peaks[np.where(x2[peaks] > 0)]
@@ -146,4 +146,4 @@ f = extract_pitch_feature(y, sr)
 assert len(f) == 5
 feature += f
 
-print(audio_path,feature)
+print(audio_path, tuple(feature))
