@@ -53,7 +53,7 @@ def parallel(window):
     return top3
 
 
-def calc(data):
+def extract_bpm_feature(data):
     hist = np.zeros(300)
     pool = multiprocessing.Pool(16)
     tops = pool.map(parallel, SliceWindow(data, WINDOW_SIZE, WINDOW_SIZE / 2))
@@ -68,7 +68,7 @@ def calc(data):
     p1 = 1.0 / fst
     p2 = 1.0 / snd
     s = np.sum(hist)
-    print(fst, snd)
+    # print(fst, snd)
     return (a0, a1, ra, p1, p2, s)
     
 
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     data, sr = librosa.load(sys.argv[1])
     data = librosa.core.to_mono(data)
     data = librosa.core.resample(data, sr, SR)
-    print(sys.argv[1], calc(data))
+    print(sys.argv[1], extract_bpm_feature(data))
 
     onset_env = librosa.onset.onset_strength(data, sr=SR)
     tempo = librosa.beat.estimate_tempo(onset_env, sr=SR)
