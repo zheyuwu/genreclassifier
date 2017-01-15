@@ -5,6 +5,7 @@ import otherfeature
 import random
 import collections
 import numpy as np
+import json
 
 def validate(trainset, testset):
     labels = collections.defaultdict(list)
@@ -38,14 +39,7 @@ def validate(trainset, testset):
 
     return (float(corcnt) / len(testset), confus)
 
-datadict = dict()
-
-for name, fea in otherfeature.data:
-    datadict[name] = fea
-
-for name, fea in bpmfeature.data:
-    if name in datadict:
-        datadict[name] += fea
+datadict = json.load(open('feature.json','r'))
 
 data = list(datadict.items())
 mat = np.zeros([len(data), len(data[0][1])])
