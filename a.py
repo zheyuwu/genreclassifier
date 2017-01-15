@@ -82,7 +82,8 @@ def gen_x2(x_low, x_high):
 def SACF_Enhancer(x2):
     # Select positive peaks
     peaks = librosa.util.peak_pick(x2, 8, 8, 16, 16, 0, 4)
-    assert len(peaks) > 0
+    if len(peaks) == 0:
+        return []
 
     peaks = peaks[np.where(x2[peaks] > 0)]
     # Select p in peaks where x[p] - x[p/2] > 0

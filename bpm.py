@@ -68,14 +68,16 @@ def calc(data):
     p1 = 1.0 / fst
     p2 = 1.0 / snd
     s = np.sum(hist)
+    print(fst, snd)
     return (a0, a1, ra, p1, p2, s)
     
 
 if __name__ == '__main__':
     data, sr = librosa.load(sys.argv[1])
-    assert sr == SR
+    data = librosa.core.to_mono(data)
+    data = librosa.core.resample(data, sr, SR)
     print(sys.argv[1], calc(data))
 
-    #onset_env = librosa.onset.onset_strength(data, sr=sr)
-    #tempo = librosa.beat.estimate_tempo(onset_env, sr=sr)
-    #print(tempo)
+    onset_env = librosa.onset.onset_strength(data, sr=SR)
+    tempo = librosa.beat.estimate_tempo(onset_env, sr=SR)
+    print(tempo)

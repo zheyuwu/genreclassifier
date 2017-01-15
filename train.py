@@ -19,6 +19,7 @@ def validate(trainset, testset):
         models[clas] = M
 
     corcnt = 0
+    confus = collections.defaultdict(lambda : collections.defaultdict(int))
 
     for name, fea in testset:
         ans = name.split('/')[1]
@@ -33,7 +34,9 @@ def validate(trainset, testset):
         if ans == pred:
             corcnt += 1
 
-    return float(corcnt) / len(testset) * 100
+        confus[ans][pred] += 1
+
+    return (float(corcnt) / len(testset), confus)
 
 datadict = dict()
 
@@ -53,14 +56,24 @@ sdata = list()
 for i, row in enumerate(data):
     sdata.append((row[0], mat[i]))
 data = sdata
-random.seed(23)
+random.seed(31)
 random.shuffle(data)
 
-chunk = len(data) / 5
-accs = list()
-for st in range(0, len(data), chunk):
-    trainset = data[0 : st] + data[st + chunk:]
-    testset = data[st: st + chunk]
-    accs.append(validate(trainset, testset))
+chunk = len(data) / 9 + 1
+st = 0
+trainset = data[0 : st] + data[st + chunk:]
+testset = data[st: st + chunk]
 
-print(np.mean(accs))
+acc, confus = validate(trainset, testset)
+
+print('acc: %f'%acc)
+print('confusion matrix (answer \ predict)')
+accmap = dict((y,x) for x, y in enumerate(confus.keys()))
+title = '\t' + '\t'.join(x[0][:7] for x in sorted(list(accmap.items()), key=lambda x: x[1]))
+print(title)
+for name, row in confus.items():
+    lis = list([0] * len(confus))
+    s = sum(row.values())
+    for n, val in row.items():
+        lis[accmap[n]] = '%.2f'%(float(val) / s)
+    print(name[:7] + '\t' + '\t'.join(str(x) for x in lis))
