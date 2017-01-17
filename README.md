@@ -1,4 +1,10 @@
 # genreclassifier
+
+## Install
+```
+pip install -r requirements.txt
+```
+
 ## Extract feature
 ```
 python2 feature.py [FILE]
